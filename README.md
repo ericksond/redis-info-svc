@@ -1,3 +1,3 @@
 # redis-info-svc
 
-A rudimentary service proxy to the redis-cli client info based on go-kit
+A basic service proxy to the `redis-cli info` based on go-kit.
