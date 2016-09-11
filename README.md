@@ -1,10 +1,10 @@
 # redis-info-svc
 
-A basic service proxy to `redis-cli info` based on go-kit.
+A basic service proxy to `redis-cli info` based on [go-kit](https://github.com/go-kit/kit).
 
 ## Installation
 
-Install Go. https://golang.org/doc/install
+Install [Go](https://golang.org/doc/install).
 
 ```
 git clone https://github.com/ericksond/redis-info-svc.git
