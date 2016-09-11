@@ -14,7 +14,7 @@ func makeInfoEndpoint(svc RedisInfoService) endpoint.Endpoint {
 		req := request.(infoRequest)
 		v, err := svc.Info(req.Addr, req.Passwd)
 		if err != nil {
-			return infoResponse{v, err.Error()}, nil
+			return infoResponse{nil, err.Error()}, nil
 		}
 		return infoResponse{v, ""}, nil
 	}
@@ -38,6 +38,6 @@ type infoRequest struct {
 }
 
 type infoResponse struct {
-	V   string `json:"v"`
-	Err string `json:"err,omitempty"`
+	Info map[string]interface{}
+	Err  string `json:"err,omitempty"`
 }

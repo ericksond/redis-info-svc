@@ -2,20 +2,22 @@ package main
 
 import (
 	"errors"
+	"regexp"
+	"strings"
 
 	redis "gopkg.in/redis.v4"
 )
 
 // RedisInfoService provides output from the redis-cli info command
 type RedisInfoService interface {
-	Info(string, string) (string, error)
+	Info(string, string) (map[string]interface{}, error)
 }
 
 type redisInfoService struct{}
 
-func (redisInfoService) Info(addr string, passwd string) (string, error) {
+func (redisInfoService) Info(addr string, passwd string) (map[string]interface{}, error) {
 	if addr == "" {
-		return "", ErrHostEmpty
+		return nil, ErrHostEmpty
 	}
 
 	client := redis.NewClient(&redis.Options{
@@ -25,8 +27,27 @@ func (redisInfoService) Info(addr string, passwd string) (string, error) {
 	})
 
 	info, err := client.Info().Result()
-	return info, err
+
+	m := make(map[string]interface{})
+	x := strings.Split(info, "\r\n")
+
+	for i := 0; i < len(x); i++ {
+		match, err := regexp.MatchString(":", x[i])
+		if err != nil {
+			return nil, ErrRegexMatch
+		}
+
+		if match == true {
+			y := strings.Split(x[i], ":")
+			m[y[0]] = y[1]
+		}
+	}
+
+	return m, err
 }
 
-// ErrHostEmpty is returned when an input string is empty
-var ErrHostEmpty = errors.New("empty host request")
+var (
+	ErrHostEmpty    = errors.New("empty host request")
+	ErrRegexMatch   = errors.New("regex match error")
+	ErrMarshalError = errors.New("marshal error")
+)

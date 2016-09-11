@@ -11,7 +11,7 @@ type loggingMiddleware struct {
 	next   RedisInfoService
 }
 
-func (mw loggingMiddleware) Info(addr string, passwd string) (output string, err error) {
+func (mw loggingMiddleware) Info(addr string, passwd string) (output map[string]interface{}, err error) {
 	defer func(begin time.Time) {
 		_ = mw.logger.Log(
 			"method", "info",
