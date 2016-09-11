@@ -14,8 +14,8 @@ type RedisInfoService interface {
 type redisInfoService struct{}
 
 func (redisInfoService) Info(addr string, passwd string) (string, error) {
-	if addr == "" || passwd == "" {
-		return "", ErrEmpty
+	if addr == "" {
+		return "", ErrHostEmpty
 	}
 
 	client := redis.NewClient(&redis.Options{
@@ -28,5 +28,5 @@ func (redisInfoService) Info(addr string, passwd string) (string, error) {
 	return info, err
 }
 
-// ErrEmtpy is returned when an input string is empty
-var ErrEmpty = errors.New("empty request")
+// ErrHostEmpty is returned when an input string is empty
+var ErrHostEmpty = errors.New("empty host request")
